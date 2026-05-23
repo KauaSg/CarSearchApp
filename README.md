@@ -2,6 +2,16 @@
 
 Aplicacao com backend Spring Boot e app mobile/web Expo para pesquisar especificacoes de veiculos usando Gemini.
 
+## Integrantes do Grupo
+
+| Nome | RM |
+| --- | --- |
+| Pietro Vitor Pezzente | RM557283 |
+| Eric Darakjian | RM557082 |
+| Luciano Henrique Meriato Junior | RM554546 |
+| Kaua Soares Guimaraes | RM559044 |
+| Enzo Mikael Sanches | RM558887 |
+
 ## Estrutura
 
 - `CarSearch/`: app Expo.
