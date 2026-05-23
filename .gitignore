@@ -1,0 +1,30 @@
+# Local runtime files
+.runlogs/
+.env
+.env.*
+!.env.example
+
+# Node / Expo
+CarSearch/node_modules/
+CarSearch/.expo/
+CarSearch/dist/
+CarSearch/web-build/
+CarSearch/expo-env.d.ts
+CarSearch/.env
+CarSearch/.env.*
+!CarSearch/.env.example
+
+# Java / Spring Boot
+**/target/
+**/build/
+**/.mvn/wrapper/maven-wrapper.jar
+
+# Crash and replay logs
+**/hs_err_pid*.log
+**/replay_pid*.log
+
+# IDE / OS
+.vscode/
+.idea/
+*.iml
+.DS_Store
