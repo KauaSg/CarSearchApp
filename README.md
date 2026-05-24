@@ -2,6 +2,8 @@
 
 Aplicacao com backend Spring Boot e app mobile/web Expo para pesquisar especificacoes de veiculos usando Gemini.
 
+Versao atual: **v2 com Firebase Authentication + Cloud Firestore**.
+
 ## Integrantes do Grupo
 
 | Nome | RM |
@@ -14,8 +16,9 @@ Aplicacao com backend Spring Boot e app mobile/web Expo para pesquisar especific
 
 ## Estrutura
 
-- `CarSearch/`: app Expo.
+- `CarSearch/`: app Expo v2 com login, cadastro, recuperacao de senha e historico no Firestore.
 - `carSearch_backend/carSearch_backend/`: backend Spring Boot usado pela aplicacao.
+- `CarSearch/docs/`: checklist, contrato de API, roteiro de apresentacao e configuracao Firebase.
 
 ## Backend
 
@@ -70,7 +73,20 @@ Para teste no PC, deixe:
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:8080
 EXPO_PUBLIC_ENABLE_LOCAL_FALLBACK=false
+
+EXPO_PUBLIC_FIREBASE_API_KEY=cole_sua_api_key
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=seu-projeto
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=seu-projeto.appspot.com
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=000000000000
+EXPO_PUBLIC_FIREBASE_APP_ID=1:000000000000:web:xxxxxxxxxxxxxxxx
 ```
+
+Antes do teste final, ative no Firebase:
+
+- Authentication com Email/Password.
+- Firestore Database.
+- Regras de seguranca descritas em `CarSearch/docs/firebase-setup.md`.
 
 Rode:
 

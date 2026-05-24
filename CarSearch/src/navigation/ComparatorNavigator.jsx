@@ -1,8 +1,7 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import CarComparatorScreen from '../screens/CarComparatorScreen';
-import CarComparatorResultScreen from '../screens/CarComparatorResultScreen';
+import CarComparatorScreen from "../screens/CarComparatorScreen";
+import CarComparatorResultScreen from "../screens/CarComparatorResultScreen";
 
 const Stack = createNativeStackNavigator();
 

@@ -1,218 +1,197 @@
 import React from "react";
 import {
-  Button,
   Image,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { useRoute } from "@react-navigation/native";
+import { theme } from "../styles/theme";
 
-export default function CarComparatorResultScreen({navigation}) {
-  const route = useRoute();
-
+export default function CarComparatorResultScreen({ navigation, route }) {
   const { carros, resultado } = route.params || {};
-
-  const [lista, setLista] = React.useState([]);
-
-  React.useEffect(() => {
-    if (resultado && typeof resultado === "object") {
-      const listaFormatada = Object.values(resultado).map(
-        (value) => `${value}`,
-      );
-
-      setLista(listaFormatada);
-    } else {
-      setLista([]);
-    }
-  }, [resultado]);
+  const lista = Array.isArray(resultado) ? resultado : [];
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Image
-          source={require("../../assets/fordLogo.png")}
-          style={styles.logo}
-        />
+        <Image source={require("../../assets/fordLogo.png")} style={styles.logo} />
+
+        <Text style={styles.kicker}>Resultado da comparação</Text>
 
         <View style={styles.header}>
           <View style={styles.carView}>
             <Text style={styles.brand}>{carros?.marca?.toUpperCase()}</Text>
-            <Text style={styles.model}>
-              {carros?.modelo?.toUpperCase()} {carros?.versao?.toUpperCase()}
-            </Text>
+            <Text style={styles.model}>{carros?.modelo} {carros?.versao}</Text>
           </View>
 
           <Text style={styles.vs}>X</Text>
 
           <View style={styles.carView}>
             <Text style={styles.brand}>{carros?.marca2?.toUpperCase()}</Text>
-            <Text style={styles.model}>
-              {carros?.modelo2?.toUpperCase()} {carros?.versao2?.toUpperCase()}
-            </Text>
+            <Text style={styles.model}>{carros?.modelo2} {carros?.versao2}</Text>
           </View>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Resultados da comparação</Text>
+          <View style={styles.cardHeader}>
+            <Ionicons name="analytics-outline" size={22} color={theme.colors.primaryLight} />
+            <Text style={styles.cardTitle}>Análise competitiva</Text>
+          </View>
 
-          {lista.map((item, index) => (
-            <View style={styles.obsCard} key={index}>
-              <View style={styles.obsBadge}>
-                <Text style={styles.obsBadgeText}>{index + 1}</Text>
-              </View>
+          {lista.length ? (
+            lista.map((item, index) => (
+              <View style={styles.obsCard} key={`${item}-${index}`}>
+                <View style={styles.obsBadge}>
+                  <Text style={styles.obsBadgeText}>{index + 1}</Text>
+                </View>
 
-              <View style={styles.obsItem}>
                 <Text style={styles.obsItemText}>{item}</Text>
               </View>
-            </View>
-          ))}
+            ))
+          ) : (
+            <Text style={styles.emptyText}>Nenhum item retornado na comparação.</Text>
+          )}
         </View>
 
-        <TouchableOpacity
-          style={styles.buttonPrimary}
-          onPress={() => navigation.popToTop()}
-        >
-          <Text style={styles.buttonText}>Nova Busca</Text>
+        <TouchableOpacity style={styles.buttonPrimary} onPress={() => navigation.popToTop()}>
+          <Ionicons name="refresh-outline" size={18} color={theme.colors.text} />
+          <Text style={styles.buttonText}>Nova comparação</Text>
         </TouchableOpacity>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0F172A",
+    backgroundColor: theme.colors.background
   },
-
   scroll: {
-    padding: 24,
-    alignItems: "center",
+    padding: theme.spacing.screen,
+    paddingTop: 52,
+    paddingBottom: 36
   },
-
   logo: {
-    width: 200,
-    height: 100,
-    marginBottom: 20,
+    width: 150,
+    height: 70,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginBottom: 10
   },
-
+  kicker: {
+    color: theme.colors.primaryLight,
+    textAlign: "center",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    marginBottom: 18
+  },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    width: "100%",
-    marginBottom: 25,
+    gap: 10,
+    marginBottom: 18
   },
-
   carView: {
     flex: 1,
+    backgroundColor: theme.colors.card,
+    borderRadius: 14,
+    padding: 14,
     alignItems: "center",
-    padding: 10,
-    borderRadius: 12,
-    backgroundColor: "#1E293B",
+    minHeight: 92,
+    justifyContent: "center",
+    borderColor: theme.colors.border,
+    borderWidth: 1
   },
-
   brand: {
-    color: "#3B82F6",
-    fontSize: 14,
-    fontWeight: "bold",
-    letterSpacing: 1,
+    color: theme.colors.primaryLight,
+    fontSize: 12,
+    fontWeight: "900",
+    letterSpacing: 1
   },
-
   model: {
-    color: "#FFF",
+    color: theme.colors.text,
     fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 5,
-    textAlign: "center",
+    fontWeight: "800",
+    marginTop: 6,
+    textAlign: "center"
   },
-
   vs: {
-    color: "#FFF",
-    fontSize: 22,
-    fontWeight: "bold",
-    marginHorizontal: 10,
+    color: theme.colors.text,
+    fontSize: 20,
+    fontWeight: "900"
   },
-
   card: {
-    backgroundColor: "#1E293B",
-    borderRadius: 16,
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.spacing.radius,
     padding: 18,
-    width: "100%",
-    marginTop: 20,
-    alignItems: "center",
+    borderWidth: 1,
+    borderColor: theme.colors.border
   },
-
-  cardTitle: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-
-  cardText: {
-    color: "#94A3B8",
-    fontSize: 14,
-  },
-
-  obsCard: {
+  cardHeader: {
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    marginBottom: 12,
+    gap: 8,
+    marginBottom: 14
   },
-
-  obsBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#3B82F6",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-    flexShrink: 0,
+  cardTitle: {
+    color: theme.colors.text,
+    fontSize: 17,
+    fontWeight: "800"
   },
-
-  obsItem: {
-    flex: 1,
+  obsCard: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "flex-start",
+    backgroundColor: theme.colors.surface,
+    borderRadius: 12,
+    borderColor: theme.colors.border,
+    borderWidth: 1,
     padding: 12,
-    borderWidth: 2,
-    borderColor: "#3B82F6",
-    borderRadius: 10,
-    backgroundColor: "#0F172A",
+    marginBottom: 10
   },
-
+  obsBadge: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: theme.colors.primary,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  obsBadgeText: {
+    color: theme.colors.text,
+    fontWeight: "900"
+  },
   obsItemText: {
-    color: "#FFF",
+    flex: 1,
+    color: theme.colors.text,
     fontSize: 14,
     lineHeight: 20,
+    fontWeight: "600"
   },
-
-  obsBadgeText: {
-    color: "#fff",
-    fontWeight: "bold",
+  emptyText: {
+    color: theme.colors.muted,
+    textAlign: "center",
+    padding: 16
   },
   buttonPrimary: {
-    backgroundColor: "#2563EB",
-    padding: 16,
-    borderRadius: 10,
+    backgroundColor: theme.colors.primary,
+    padding: 15,
+    borderRadius: 12,
     alignItems: "center",
-    width: "100%",
-    marginTop: 20,
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 18
   },
-
   buttonText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
+    color: theme.colors.text,
+    fontWeight: "800"
+  }
 });

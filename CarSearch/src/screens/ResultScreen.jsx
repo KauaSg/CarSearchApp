@@ -1,204 +1,233 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   Image,
+  ScrollView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { useRoute } from "@react-navigation/native";
-import { buscarImagem } from "../service/CarService";
+import { theme } from "../styles/theme";
 
-export default function ResultScreen({navigation}) {
-  const route = useRoute();
-  const resultado = route.params?.resultado;
-  const [imagemUrl, setImagemUrl] = React.useState(null);
+export default function ResultScreen({ navigation, route }) {
+  const { resultado } = route.params || {};
+  const specs = Array.isArray(resultado?.especificacoes) ? resultado.especificacoes : [];
 
-  const dados = {
-    marca: resultado.marca,
-    modelo: resultado.modelo,
-    versao: resultado.versao
-  }
-
-  useEffect(() => {
-    pesquisarImagem();
-  }, []);
-
-  const pesquisarImagem = async () => {
-    try {
-      const resultadoImagem = await buscarImagem(dados);
-      setImagemUrl(resultadoImagem);
-    } catch (error) {
-      console.error("Erro ao pesquisar imagem:", error);
-    }
-  };
-
-  if (!resultado) {
-    return (
-      <View style={styles.center}>
-        <Text style={{ color: "#FFF" }}>Erro ao carregar dados</Text>
-      </View>
-    );
+  function goHistory() {
+    navigation.getParent()?.navigate("Historico");
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-        <Image
-          source={require("../../assets/fordLogo.png")}
-          style={styles.logo}
-        />
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <Image source={require("../../assets/fordLogo.png")} style={styles.logo} />
 
-        <View style={styles.header}>
-          <Text style={styles.title}>
-            {resultado.marca.toUpperCase()}
-          </Text>
-          <Text style={styles.subtitle}>
-            {resultado.modelo.toUpperCase()} {resultado.versao.toUpperCase()}
-          </Text>
+        <Text style={styles.kicker}>Resultado padronizado</Text>
+        <Text style={styles.title}>
+          {resultado?.marca} {resultado?.modelo} {resultado?.versao}
+        </Text>
+
+        {resultado?.offline ? (
+          <View style={styles.warningCard}>
+            <Ionicons name="warning-outline" size={20} color={theme.colors.warning} />
+            <Text style={styles.warningText}>{resultado.offlineMessage}</Text>
+          </View>
+        ) : null}
+
+        <View style={styles.summaryCard}>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryLabel}>Fonte</Text>
+            <Text style={styles.summaryValue}>{resultado?.fonte || "api"}</Text>
+          </View>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryLabel}>Campos</Text>
+            <Text style={styles.summaryValue}>{specs.length}</Text>
+          </View>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Especificações</Text>
+          <View style={styles.cardHeader}>
+            <Ionicons name="list-outline" size={22} color={theme.colors.primaryLight} />
+            <Text style={styles.cardTitle}>Ficha técnica</Text>
+          </View>
 
-          {resultado.especificacoes?.map((item, index) => (
-            <View key={index} style={styles.specItem}>
-              <Text style={styles.specName}>
-                {item.nome.toUpperCase()}
-              </Text>
-              <Text style={styles.specValue}>
-                {item.valor}
-              </Text>
-            </View>
-          ))}
+          {specs.length ? (
+            specs.map((item, index) => (
+              <View key={`${item.nome}-${index}`} style={styles.specItem}>
+                <Text style={styles.specName}>{item.nome}</Text>
+                <Text style={styles.specValue}>{item.valor || "Não disponível"}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.emptyText}>Nenhuma especificação retornada.</Text>
+          )}
         </View>
-        {imagemUrl &&(
-          <Image
-            source={{ uri: imagemUrl }}
-            
-            style={{ width: "100%", height: 200, marginTop: 20, borderRadius: 10, justifyContent: "center", alignItems: "center" }}
-          />
-        )}
-          <View style={styles.flowControl}>
-                    <TouchableOpacity
-                      style={[styles.buttonPrimary, { backgroundColor: "#334155" }]}
-                      onPress={() => navigation.goBack()}
-                    >
-                      <Text style={styles.buttonText}>Voltar</Text>
-                    </TouchableOpacity>
-          
-                    <TouchableOpacity
-                      style={styles.buttonPrimary}
-                      onPress={() => navigation.popToTop()}
-                    >
-                      <Text style={styles.buttonText}>Nova Busca</Text>
-                    </TouchableOpacity>
-            </View>
+
+        <View style={styles.flowControl}>
+          <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.popToTop()}>
+            <Ionicons name="search-outline" size={18} color={theme.colors.text} />
+            <Text style={styles.buttonText}>Nova busca</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.primaryButton} onPress={goHistory}>
+            <Ionicons name="time-outline" size={18} color={theme.colors.text} />
+            <Text style={styles.buttonText}>Histórico</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0F172A",
-    padding: 20,
-    paddingTop: 60,
+    backgroundColor: theme.colors.background
   },
-
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#0F172A",
+  scroll: {
+    padding: theme.spacing.screen,
+    paddingTop: 52,
+    paddingBottom: 36
   },
-
   logo: {
-    width: 200,
-    height: 100,
-    alignSelf: "center",
-    marginBottom: 20,
+    width: 150,
+    height: 70,
     resizeMode: "contain",
-  },
-
-  header: {
-    alignItems: "center",
-    marginBottom: 25,
-  },
-
-  title: {
-    color: "#3B82F6",
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 2,
-  },
-
-  subtitle: {
-    color: "#FFF",
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 5,
-  },
-
-  card: {
-    backgroundColor: "#1E293B",
-    borderRadius: 16,
-    padding: 20,
-  },
-
-  sectionTitle: {
-    color: "#FFF",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
     alignSelf: "center",
+    marginBottom: 12
   },
-
-  specItem: {
-    backgroundColor: "#334155",
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 10,
-  },
-
-  specName: {
-    color: "#94A3B8",
+  kicker: {
+    color: theme.colors.primaryLight,
+    textAlign: "center",
     fontSize: 12,
+    fontWeight: "800",
     textTransform: "uppercase",
+    letterSpacing: 1.2
   },
-
-  specValue: {
-    color: "#FFF",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 3,
+  title: {
+    color: theme.colors.text,
+    fontSize: 26,
+    fontWeight: "800",
+    textAlign: "center",
+    marginTop: 4,
+    marginBottom: 18
   },
-
-    flowControl: {
+  warningCard: {
+    backgroundColor: "rgba(245,158,11,0.12)",
+    borderColor: theme.colors.warning,
+    borderWidth: 1,
+    borderRadius: 14,
+    padding: 14,
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
+    gap: 10,
+    marginBottom: 16
   },
-
-  buttonPrimary: {
-    backgroundColor: "#2563EB",
-    padding: 16,
-    borderRadius: 10,
+  warningText: {
+    color: theme.colors.text,
+    flex: 1,
+    lineHeight: 20
+  },
+  summaryCard: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 16
+  },
+  summaryItem: {
+    flex: 1,
+    backgroundColor: theme.colors.card,
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: theme.colors.border
+  },
+  summaryLabel: {
+    color: theme.colors.muted,
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase"
+  },
+  summaryValue: {
+    color: theme.colors.text,
+    fontSize: 17,
+    fontWeight: "800",
+    marginTop: 4
+  },
+  card: {
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.spacing.radius,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: theme.colors.border
+  },
+  cardHeader: {
+    flexDirection: "row",
     alignItems: "center",
-    width: "48%",
+    gap: 8,
+    marginBottom: 12
   },
-
-  buttonText: {
-    color: "#FFF",
-    fontWeight: "bold",
+  cardTitle: {
+    color: theme.colors.text,
+    fontSize: 17,
+    fontWeight: "800"
+  },
+  specItem: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginBottom: 10
+  },
+  specName: {
+    color: theme.colors.primaryLight,
+    fontSize: 12,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    letterSpacing: 0.8
+  },
+  specValue: {
+    color: theme.colors.text,
     fontSize: 16,
+    fontWeight: "700",
+    marginTop: 6,
+    lineHeight: 22
   },
+  emptyText: {
+    color: theme.colors.muted,
+    textAlign: "center",
+    padding: 16
+  },
+  flowControl: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 18
+  },
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: theme.colors.card,
+    borderColor: theme.colors.border,
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8
+  },
+  primaryButton: {
+    flex: 1,
+    backgroundColor: theme.colors.primary,
+    padding: 15,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8
+  },
+  buttonText: {
+    color: theme.colors.text,
+    fontWeight: "800"
+  }
 });
