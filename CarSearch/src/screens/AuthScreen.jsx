@@ -70,17 +70,17 @@ export default function AuthScreen() {
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <Image source={require("../../assets/fordLogo.png")} style={styles.logo} />
 
-        <Text style={styles.kicker}>Firebase Auth + Firestore</Text>
+        <Text style={styles.kicker}>Acesso seguro</Text>
         <Text style={styles.title}>Acesse o CarSearch</Text>
         <Text style={styles.subtitle}>
-          Cada usuário entra com sua conta e mantém um histórico próprio de pesquisas no Firebase.
+          Entre com sua conta para manter suas pesquisas organizadas e acessar seu histórico.
         </Text>
 
         {!isFirebaseConfigured ? (
           <View style={styles.warningCard}>
             <Ionicons name="warning-outline" size={20} color={theme.colors.warning} />
             <Text style={styles.warningText}>
-              Firebase ainda não configurado. Preencha o arquivo .env com as chaves do seu projeto Firebase para liberar login e cadastro.
+              A autenticação ainda não está pronta neste ambiente. Revise a configuração antes de testar login e cadastro.
             </Text>
           </View>
         ) : null}

@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { BASE_URL } from "../service/CarService";
 import { QUICK_VEHICLES } from "../data/defaultSpecifications";
 import { theme } from "../styles/theme";
 
@@ -128,10 +127,10 @@ export default function HomeScreen({ navigation, route }) {
         </View>
 
         <View style={styles.infoCard}>
-          <Ionicons name="cloud-outline" size={20} color={theme.colors.muted} />
+          <Ionicons name="shield-checkmark-outline" size={20} color={theme.colors.muted} />
           <View style={styles.infoTextBox}>
-            <Text style={styles.infoTitle}>API configurada</Text>
-            <Text style={styles.infoText}>{BASE_URL}</Text>
+            <Text style={styles.infoTitle}>Consulta conectada</Text>
+            <Text style={styles.infoText}>As informações são processadas pela solução CarSearch em tempo real.</Text>
           </View>
         </View>
       </ScrollView>

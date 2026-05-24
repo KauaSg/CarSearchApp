@@ -56,10 +56,10 @@ export default function HistoryScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scroll}>
         <Image source={require("../../assets/fordLogo.png")} style={styles.logo} />
 
-        <Text style={styles.kicker}>Histórico na nuvem</Text>
+        <Text style={styles.kicker}>Histórico</Text>
         <Text style={styles.title}>Histórico de pesquisas</Text>
         <Text style={styles.subtitle}>
-          As últimas consultas ficam salvas no Firebase Firestore e separadas por usuário autenticado.
+          Suas últimas consultas ficam salvas na conta atual para facilitar novas análises.
         </Text>
 
         <View style={styles.headerRow}>
