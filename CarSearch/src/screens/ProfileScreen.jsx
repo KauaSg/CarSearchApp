@@ -15,6 +15,7 @@ import { theme } from "../styles/theme";
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
+  const displayEmail = maskEmail(user?.email);
 
   function handleLogout() {
     Alert.alert("Sair da conta", "Deseja encerrar a sessão neste dispositivo?", [
@@ -27,10 +28,10 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Image source={require("../../assets/fordLogo.png")} style={styles.logo} />
-        <Text style={styles.kicker}>Conta Firebase</Text>
-        <Text style={styles.title}>Perfil do usuário</Text>
+        <Text style={styles.kicker}>Conta</Text>
+        <Text style={styles.title}>Meu perfil</Text>
         <Text style={styles.subtitle}>
-          O login separa o histórico por usuário, melhora a rastreabilidade e aproxima o app de uma solução real para a Ford.
+          Gerencie sua sessão e acompanhe o status da sua conta no CarSearch.
         </Text>
 
         <View style={styles.card}>
@@ -38,16 +39,36 @@ export default function ProfileScreen() {
             <Ionicons name="person-outline" size={34} color={theme.colors.text} />
           </View>
           <Text style={styles.name}>{user?.displayName || "Usuário CarSearch"}</Text>
-          <Text style={styles.email}>{user?.email || "E-mail não disponível"}</Text>
+          <Text style={styles.email}>{displayEmail}</Text>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoLabel}>UID Firebase</Text>
-            <Text style={styles.infoValue} numberOfLines={2}>{user?.uid || "Não disponível"}</Text>
+            <View style={styles.infoIcon}>
+              <Ionicons name="checkmark-circle-outline" size={20} color={theme.colors.success} />
+            </View>
+            <View style={styles.infoTextBox}>
+              <Text style={styles.infoLabel}>Status da sessão</Text>
+              <Text style={styles.infoValue}>Conta conectada neste dispositivo.</Text>
+            </View>
           </View>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoLabel}>Histórico</Text>
-            <Text style={styles.infoValue}>Salvo em users/{user?.uid || "uid"}/history no Firestore</Text>
+            <View style={styles.infoIcon}>
+              <Ionicons name="lock-closed-outline" size={20} color={theme.colors.primaryLight} />
+            </View>
+            <View style={styles.infoTextBox}>
+              <Text style={styles.infoLabel}>Privacidade</Text>
+              <Text style={styles.infoValue}>Seu histórico fica separado dos demais usuários.</Text>
+            </View>
+          </View>
+
+          <View style={styles.infoBox}>
+            <View style={styles.infoIcon}>
+              <Ionicons name="mail-outline" size={20} color={theme.colors.primaryLight} />
+            </View>
+            <View style={styles.infoTextBox}>
+              <Text style={styles.infoLabel}>Recuperação de acesso</Text>
+              <Text style={styles.infoValue}>Use a tela de login para receber um link de redefinição de senha.</Text>
+            </View>
           </View>
         </View>
 
@@ -58,6 +79,16 @@ export default function ProfileScreen() {
       </ScrollView>
     </View>
   );
+}
+
+function maskEmail(email) {
+  if (!email) return "E-mail não disponível";
+
+  const [name, domain] = String(email).split("@");
+  if (!name || !domain) return "E-mail cadastrado";
+
+  const visibleName = name.length <= 2 ? name[0] : name.slice(0, 2);
+  return `${visibleName}***@${domain}`;
 }
 
 const styles = StyleSheet.create({
@@ -134,7 +165,21 @@ const styles = StyleSheet.create({
     padding: 14,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    marginTop: 10
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12
+  },
+  infoIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: theme.colors.card,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  infoTextBox: {
+    flex: 1
   },
   infoLabel: {
     color: theme.colors.primaryLight,

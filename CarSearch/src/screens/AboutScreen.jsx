@@ -8,34 +8,33 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { BASE_URL } from "../service/CarService";
 import { theme } from "../styles/theme";
 
 const items = [
   {
     icon: "search-outline",
-    title: "Consulta técnica",
-    text: "O usuário informa marca, modelo, versão e atributos livres para receber uma ficha técnica padronizada."
+    title: "Consulta orientada",
+    text: "Informe marca, modelo, versão e os atributos desejados para receber uma ficha técnica organizada."
   },
   {
     icon: "git-compare-outline",
-    title: "Comparação competitiva",
-    text: "A tela de comparação apoia analistas na leitura de posicionamento entre veículos Ford e concorrentes."
-  },
-  {
-    icon: "cloud-outline",
-    title: "Integração com API",
-    text: "O app consome o backend Spring Boot dos repositórios do grupo, com suporte aos endpoints /carros e /veiculos."
+    title: "Comparação rápida",
+    text: "Compare dois veículos em uma leitura direta, com foco nos pontos que mais importam para análise."
   },
   {
     icon: "time-outline",
-    title: "Histórico na nuvem",
-    text: "As últimas consultas são armazenadas no Cloud Firestore e vinculadas ao usuário autenticado."
+    title: "Histórico privado",
+    text: "Suas consultas ficam vinculadas à sua conta, permitindo retomar pesquisas anteriores com facilidade."
   },
   {
-    icon: "person-circle-outline",
-    title: "Autenticação",
-    text: "Login e cadastro com Firebase Authentication permitem separar dados por usuário e melhorar a rastreabilidade."
+    icon: "shield-checkmark-outline",
+    title: "Acesso seguro",
+    text: "O app usa login para separar as informações de cada pessoa e manter o histórico individual."
+  },
+  {
+    icon: "car-sport-outline",
+    title: "Foco no desafio Ford",
+    text: "A experiência foi desenhada para apoiar inteligência competitiva automotiva com dados claros e comparáveis."
   }
 ];
 
@@ -45,16 +44,11 @@ export default function AboutScreen() {
       <ScrollView contentContainerStyle={styles.scroll}>
         <Image source={require("../../assets/fordLogo.png")} style={styles.logo} />
 
-        <Text style={styles.kicker}>Sprint Mobile & IoT</Text>
-        <Text style={styles.title}>Sobre a solução</Text>
+        <Text style={styles.kicker}>CarSearch Ford</Text>
+        <Text style={styles.title}>Inteligência competitiva automotiva</Text>
         <Text style={styles.subtitle}>
-          O CarSearch Mobile resolve o desafio de Inteligência Competitiva Automotiva, reduzindo buscas manuais e entregando dados técnicos claros, organizados e comparáveis.
+          Uma ferramenta mobile para consultar, comparar e acompanhar especificações técnicas de veículos de forma simples.
         </Text>
-
-        <View style={styles.apiCard}>
-          <Text style={styles.apiLabel}>Backend configurado</Text>
-          <Text style={styles.apiValue}>{BASE_URL}</Text>
-        </View>
 
         {items.map((item) => (
           <View key={item.title} style={styles.card}>
@@ -69,14 +63,19 @@ export default function AboutScreen() {
         ))}
 
         <View style={styles.deliveryCard}>
-          <Text style={styles.deliveryTitle}>Itens entregues nesta sprint</Text>
-          <Text style={styles.deliveryText}>✓ React Native com Expo</Text>
-          <Text style={styles.deliveryText}>✓ Navegação por abas e stacks</Text>
-          <Text style={styles.deliveryText}>✓ Consumo de API assíncrona</Text>
-          <Text style={styles.deliveryText}>✓ Tratamento de loading e erro</Text>
-          <Text style={styles.deliveryText}>✓ Login e cadastro com Firebase</Text>
-          <Text style={styles.deliveryText}>✓ Histórico por usuário no Firestore</Text>
-          <Text style={styles.deliveryText}>✓ Fallback demonstrativo para apresentação</Text>
+          <Text style={styles.deliveryTitle}>Fluxo principal</Text>
+          <View style={styles.stepRow}>
+            <Text style={styles.stepNumber}>1</Text>
+            <Text style={styles.deliveryText}>Entre com sua conta para acessar suas pesquisas.</Text>
+          </View>
+          <View style={styles.stepRow}>
+            <Text style={styles.stepNumber}>2</Text>
+            <Text style={styles.deliveryText}>Busque um veículo e escolha os atributos técnicos.</Text>
+          </View>
+          <View style={styles.stepRow}>
+            <Text style={styles.stepNumber}>3</Text>
+            <Text style={styles.deliveryText}>Consulte resultados, compare modelos e acompanhe o histórico.</Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -123,25 +122,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 18
   },
-  apiCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: 14,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    marginBottom: 14
-  },
-  apiLabel: {
-    color: theme.colors.primaryLight,
-    fontWeight: "800",
-    fontSize: 12,
-    textTransform: "uppercase"
-  },
-  apiValue: {
-    color: theme.colors.text,
-    fontWeight: "700",
-    marginTop: 5
-  },
   card: {
     backgroundColor: theme.colors.card,
     borderRadius: theme.spacing.radius,
@@ -187,9 +167,26 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginBottom: 10
   },
-  deliveryText: {
+  stepRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    marginTop: 10
+  },
+  stepNumber: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: theme.colors.primary,
     color: theme.colors.text,
+    textAlign: "center",
     lineHeight: 24,
+    fontWeight: "800"
+  },
+  deliveryText: {
+    flex: 1,
+    color: theme.colors.text,
+    lineHeight: 21,
     fontWeight: "600"
   }
 });
