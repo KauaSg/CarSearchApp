@@ -25,7 +25,7 @@ O CarSearch Ford Mobile permite que o analista informe marca, modelo, versão e 
 ## 4. Pontos técnicos para falar
 
 - App desenvolvido em React Native com Expo.
-- Navegação por abas e stacks com React Navigation.
+- Navegação por abas e stacks com Expo Router.
 - Consumo de API REST assíncrona.
 - Integração com backend Spring Boot.
 - Login/cadastro com Firebase Authentication.

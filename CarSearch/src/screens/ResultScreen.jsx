@@ -8,15 +8,17 @@ import {
   View
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { theme } from "../styles/theme";
 
-export default function ResultScreen({ navigation, route }) {
-  const { resultado } = route.params || {};
+export default function ResultScreen() {
+  const { resultado: resultadoParam } = useLocalSearchParams();
+  const resultado = parseJsonParam(resultadoParam);
   const specs = Array.isArray(resultado?.especificacoes) ? resultado.especificacoes : [];
 
   function goHistory() {
-    navigation.getParent()?.navigate("Historico");
+    router.push("/historico");
   }
 
   return (
@@ -66,7 +68,7 @@ export default function ResultScreen({ navigation, route }) {
         </View>
 
         <View style={styles.flowControl}>
-          <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.popToTop()}>
+          <TouchableOpacity style={styles.secondaryButton} onPress={() => router.replace("/busca")}>
             <Ionicons name="search-outline" size={18} color={theme.colors.text} />
             <Text style={styles.buttonText}>Nova busca</Text>
           </TouchableOpacity>
@@ -79,6 +81,16 @@ export default function ResultScreen({ navigation, route }) {
       </ScrollView>
     </View>
   );
+}
+
+function parseJsonParam(value) {
+  if (!value) return null;
+
+  try {
+    return JSON.parse(Array.isArray(value) ? value[0] : value);
+  } catch {
+    return null;
+  }
 }
 
 const styles = StyleSheet.create({

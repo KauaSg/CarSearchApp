@@ -13,6 +13,7 @@ import {
   View
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { buscarCarro } from "../service/CarService";
 import { saveHistoryItem } from "../service/StorageService";
@@ -20,8 +21,8 @@ import { useAuth } from "../context/AuthContext";
 import { DEFAULT_SPECIFICATIONS } from "../data/defaultSpecifications";
 import { theme } from "../styles/theme";
 
-export default function SpecScreen({ navigation, route }) {
-  const { marca, modelo, versao } = route.params || {};
+export default function SpecScreen() {
+  const { marca, modelo, versao } = useLocalSearchParams();
   const [especificacao, setEspecificacao] = useState("");
   const [especificacoesList, setEspecificacoesList] = useState(DEFAULT_SPECIFICATIONS);
   const [loading, setLoading] = useState(false);
@@ -76,7 +77,10 @@ export default function SpecScreen({ navigation, route }) {
         userEmail: user?.email || null
       }, user?.uid);
 
-      navigation.navigate("Result", { resultado });
+      router.push({
+        pathname: "/busca/result",
+        params: { resultado: JSON.stringify(resultado) }
+      });
     } catch (error) {
       Alert.alert("Erro na consulta", error.message || "Não foi possível consultar a API.");
     } finally {
@@ -93,7 +97,7 @@ export default function SpecScreen({ navigation, route }) {
         <Image source={require("../../assets/fordLogo.png")} style={styles.logo} />
 
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back-outline" size={20} color={theme.colors.text} />
           </TouchableOpacity>
           <View style={styles.headerTextBox}>

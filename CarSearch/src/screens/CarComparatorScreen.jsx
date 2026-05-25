@@ -12,12 +12,13 @@ import {
   View
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
 
 import { compararVeiculos } from "../service/CarService";
 import CarInfosComponent from "../components/CarInfosComponent";
 import { theme } from "../styles/theme";
 
-export default function CarComparatorScreen({ navigation }) {
+export default function CarComparatorScreen() {
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [versao, setVersao] = useState("");
@@ -54,7 +55,13 @@ export default function CarComparatorScreen({ navigation }) {
 
     try {
       const resultado = await compararVeiculos(carros);
-      navigation.navigate("ComparatorResult", { carros, resultado });
+      router.push({
+        pathname: "/comparar/result",
+        params: {
+          carros: JSON.stringify(carros),
+          resultado: JSON.stringify(resultado)
+        }
+      });
     } catch (error) {
       Alert.alert("Erro na comparação", error.message || "Não foi possível comparar os veículos.");
     } finally {

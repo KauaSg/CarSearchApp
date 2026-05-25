@@ -30,7 +30,7 @@ Hoje a busca de especificações técnicas de veículos concorrentes pode ser ma
 
 - React Native
 - Expo
-- React Navigation
+- Expo Router
 - Firebase Authentication
 - Cloud Firestore
 - AsyncStorage como fallback local de histórico quando Firebase não estiver configurado
@@ -41,7 +41,16 @@ Hoje a busca de especificações técnicas de veículos concorrentes pode ser ma
 
 ```text
 CarSearch/
-├── App.js
+├── app/
+│   ├── _layout.jsx
+│   ├── index.jsx
+│   └── (tabs)/
+│       ├── _layout.jsx
+│       ├── busca/
+│       ├── comparar/
+│       ├── historico.jsx
+│       ├── sobre.jsx
+│       └── perfil.jsx
 ├── .env.example
 ├── src/
 │   ├── components/
@@ -50,10 +59,6 @@ CarSearch/
 │   │   └── AuthContext.jsx
 │   ├── data/
 │   │   └── defaultSpecifications.js
-│   ├── navigation/
-│   │   ├── AppNavigator.jsx
-│   │   ├── ComparatorNavigator.jsx
-│   │   └── SearchNavigator.jsx
 │   ├── screens/
 │   │   ├── AuthScreen.jsx
 │   │   ├── HomeScreen.jsx

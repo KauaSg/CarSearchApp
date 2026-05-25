@@ -10,12 +10,13 @@ import {
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
 
 import { clearHistory, getHistory } from "../service/StorageService";
 import { useAuth } from "../context/AuthContext";
 import { theme } from "../styles/theme";
 
-export default function HistoryScreen({ navigation }) {
+export default function HistoryScreen() {
   const [history, setHistory] = useState([]);
   const { user } = useAuth();
 
@@ -45,9 +46,9 @@ export default function HistoryScreen({ navigation }) {
   }
 
   function reuseSearch(item) {
-    navigation.navigate("Busca", {
-      screen: "Home",
-      params: { historyVehicle: item }
+    router.push({
+      pathname: "/busca",
+      params: { historyVehicle: JSON.stringify(item) }
     });
   }
 

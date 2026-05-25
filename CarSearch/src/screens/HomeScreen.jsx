@@ -12,23 +12,25 @@ import {
   View
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { QUICK_VEHICLES } from "../data/defaultSpecifications";
 import { theme } from "../styles/theme";
 
-export default function HomeScreen({ navigation, route }) {
+export default function HomeScreen() {
+  const params = useLocalSearchParams();
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [versao, setVersao] = useState("");
 
   useEffect(() => {
-    const vehicle = route?.params?.historyVehicle;
+    const vehicle = parseJsonParam(params.historyVehicle);
     if (vehicle) {
       setMarca(vehicle.marca || "");
       setModelo(vehicle.modelo || "");
       setVersao(vehicle.versao || "");
     }
-  }, [route?.params?.historyVehicle?.id]);
+  }, [params.historyVehicle]);
 
   function validateAndContinue() {
     const payload = {
@@ -42,7 +44,10 @@ export default function HomeScreen({ navigation, route }) {
       return;
     }
 
-    navigation.navigate("Step2", payload);
+    router.push({
+      pathname: "/busca/spec",
+      params: payload
+    });
   }
 
   function fillVehicle(vehicle) {
@@ -136,6 +141,16 @@ export default function HomeScreen({ navigation, route }) {
       </ScrollView>
     </KeyboardAvoidingView>
   );
+}
+
+function parseJsonParam(value) {
+  if (!value) return null;
+
+  try {
+    return JSON.parse(Array.isArray(value) ? value[0] : value);
+  } catch {
+    return null;
+  }
 }
 
 const styles = StyleSheet.create({

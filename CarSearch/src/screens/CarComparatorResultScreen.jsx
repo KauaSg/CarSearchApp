@@ -8,11 +8,14 @@ import {
   View
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { theme } from "../styles/theme";
 
-export default function CarComparatorResultScreen({ navigation, route }) {
-  const { carros, resultado } = route.params || {};
+export default function CarComparatorResultScreen() {
+  const { carros: carrosParam, resultado: resultadoParam } = useLocalSearchParams();
+  const carros = parseJsonParam(carrosParam);
+  const resultado = parseJsonParam(resultadoParam);
   const lista = Array.isArray(resultado) ? resultado : [];
 
   return (
@@ -57,13 +60,23 @@ export default function CarComparatorResultScreen({ navigation, route }) {
           )}
         </View>
 
-        <TouchableOpacity style={styles.buttonPrimary} onPress={() => navigation.popToTop()}>
+        <TouchableOpacity style={styles.buttonPrimary} onPress={() => router.replace("/comparar")}>
           <Ionicons name="refresh-outline" size={18} color={theme.colors.text} />
           <Text style={styles.buttonText}>Nova comparação</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
   );
+}
+
+function parseJsonParam(value) {
+  if (!value) return null;
+
+  try {
+    return JSON.parse(Array.isArray(value) ? value[0] : value);
+  } catch {
+    return null;
+  }
 }
 
 const styles = StyleSheet.create({
